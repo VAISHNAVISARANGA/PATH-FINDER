@@ -1,0 +1,3 @@
+*.html+js+css linguist-language=HTML
+*.html+js+css linguist-detectable=true
+*.html+js+css linguist-included

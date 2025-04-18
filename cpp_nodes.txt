@@ -1,0 +1,50 @@
+1,Milk Shop
+2,Apartment A
+3,School
+4,Park
+5,Bus Stop
+6,Grocery Store
+7,Temple
+8,Library
+9,Post Office
+10,Police Station
+11,Hospital
+12,Bakery
+13,Cafe
+14,ATM
+15,Clothing Store
+16,Vegetable Market
+17,Apartment B
+18,Petrol Pump
+19,Hardware Store
+20,Apartment C
+21,Book Store
+22,Movie Theater
+23,Mobile Shop
+24,Clinic
+25,Water Tank
+26,Street Light
+27,Tailor
+28,Bus Depot
+29,Subway Entrance
+30,Fire Station
+31,Sweet Shop
+32,Medical Store
+33,Garage
+34,Electricity Office
+35,Footwear Shop
+36,Public Toilet
+37,Jewelry Store
+38,Pet Shop
+39,Railway Station
+40,Construction Site
+41,Garden
+42,Apartment D
+43,Watch Repair
+44,Roadside Tea Stall
+45,Meat Shop
+46,Flower Shop
+47,Temple Gate
+48,Well
+49,Recycling Point
+50,Security Booth

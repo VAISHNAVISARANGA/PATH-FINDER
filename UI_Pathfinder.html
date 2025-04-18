@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Path Finding Algorithm Comparison</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <!-- Added console logging for debugging -->
+    <script>
+        console.log("Page loading...");
+        window.onerror = function(message, source, lineno, colno, error) {
+            console.error("Error:", message, "at", source, "line:", lineno, "column:", colno);
+            alert("Error loading page: " + message);
+            return true;
+        };
+    </script>
+</head>
+<body>
+    <div class="sidebar">
+        <h1>Path Finding Comparison</h1>
+        
+        <div class="node-search">
+            <select id="start-select">
+                <option value="">Select start location...</option>
+                <!-- Location options will be populated here -->
+            </select>
+            <select id="end-select">
+                <option value="">Select end location...</option>
+                <!-- Location options will be populated here -->
+            </select>
+            <button id="find-path-btn">Find Path</button>
+        </div>
+        
+        <div class="divider"></div>
+        
+        <div class="identical-path-notice">
+            <strong>Note:</strong> All algorithms find the same optimal path for this graph, but visualization and execution time differ.
+        </div>
+        
+        <!-- Color legend -->
+        <div class="algorithm-legend">
+            <div class="legend-item">
+                <div class="color-box dijkstra"></div>
+                <span>Dijkstra</span>
+            </div>
+            <div class="legend-item">
+                <div class="color-box astar"></div>
+                <span>A*</span>
+            </div>
+            <div class="legend-item">
+                <div class="color-box bellman-ford"></div>
+                <span>Bellman-Ford</span>
+            </div>
+            <div class="legend-item">
+                <div class="color-box floyd-warshall"></div>
+                <span>Floyd-Warshall</span>
+            </div>
+        </div>
+        
+        <div class="path-container">
+            <div class="Shortest Path" id="active-algorithm-name">Shortest Path</div>
+            <div id="path-display" class="path-line"><!-- Path will be displayed here --></div>
+            <div id="distance-display" class="info-line"><!-- Total distance will be displayed here --></div>
+        </div>
+        
+        <div id="results-container">
+            <!-- Algorithm results will be inserted here -->
+        </div>
+        
+        <div class="explanation">
+            <p><strong>Performance comparison:</strong></p>
+            <p>While all algorithms find the same optimal path for this graph, they differ in computational efficiency:</p>
+            <ul>
+                <li><strong class="algorithm-name astar">A*</strong> - Typically fastest for single-source/single-target</li>
+                <li><strong class="algorithm-name dijkstra">Dijkstra</strong> - Efficient for single-source/multiple-targets</li>
+                <li><strong class="algorithm-name bellman-ford">Bellman-Ford</strong> - Handles negative edges (slower)</li>
+                <li><strong class="algorithm-name floyd-warshall">Floyd-Warshall</strong> - Computes all paths at once (slowest)</li>
+            </ul>
+        </div>
+    </div>
+    
+    <div class="main-content">
+        <div class="graph-container" id="graph-container">
+            <!-- Nodes and edges will be inserted here -->
+            <div id="loading-indicator" style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); background:white; padding:20px; border-radius:5px; box-shadow:0 0 10px rgba(0,0,0,0.1);">
+                Loading visualization...
+            </div>
+        </div>
+        
+        <div class="controls">
+            <button id="dijkstra-btn" class="active">Dijkstra</button>
+            <button id="astar-btn">A*</button>
+            <button id="bellman-btn">Bellman-Ford</button>
+            <button id="floyd-btn">Floyd-Warshall</button>
+            <button id="reset-view-btn">Reset View</button>
+            <!-- Added debug button -->
+            <button id="debug-btn" onclick="debugVisualization()">Debug</button>
+        </div>
+    </div>
+    
+    <script src="js/graph-data.js"></script>
+    <script src="js/algorithms.js"></script>
+    <script src="js/ui-controller.js"></script>
+    <!-- Added debug script -->
+    <script>
+        function debugVisualization() {
+            console.log("Debug information:");
+            console.log("Graph data:", typeof graph, Object.keys(graph).length);
+            console.log("Node names:", typeof nodeNames, Object.keys(nodeNames).length);
+            console.log("Algorithm results:", algorithmResults);
+            
+            const container = document.getElementById('graph-container');
+            console.log("Container:", container, container.children.length);
+            
+            // Force redraw
+            if (typeof drawGraph === 'function') {
+                console.log("Forcing redraw...");
+                drawGraph();
+                alert("Debug information printed to console and visualization redrawn");
+            } else {
+                alert("drawGraph function not found - check if scripts are loaded correctly");
+            }
+        }
+        
+        // Verify script loading
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log("DOM fully loaded");
+            console.log("Graph data loaded:", typeof graph !== 'undefined');
+            console.log("Algorithms loaded:", typeof algorithmResults !== 'undefined');
+            console.log("UI controller loaded:", typeof initDemo !== 'undefined');
+            
+            // Remove loading indicator when initialization is complete
+            const loadingIndicator = document.getElementById('loading-indicator');
+            if (loadingIndicator && typeof initDemo === 'function') {
+                setTimeout(() => {
+                    loadingIndicator.style.display = 'none';
+                }, 1000);
+            }
+        });
+    </script>
+</body>
+</html>
