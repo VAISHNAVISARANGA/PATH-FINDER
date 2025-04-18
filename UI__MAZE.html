@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maze Solver</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f7fa;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+        }
+        
+        .maze-grid {
+            display: grid;
+            gap: 1px;
+            background-color: #ddd;
+            margin: 20px auto;
+            width: fit-content;
+        }
+        
+        .cell {
+            width: 30px;
+            height: 30px;
+            background-color: white;
+            cursor: pointer;
+        }
+        
+        .cell.wall {
+            background-color: #34495e;
+        }
+        
+        .cell.start {
+            background-color: #2ecc71;
+        }
+        
+        .cell.end {
+            background-color: #e74c3c;
+        }
+        
+        .cell.path {
+            background-color: #3498db;
+        }
+        
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        button {
+            padding: 8px 16px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        button:hover {
+            background-color: #2980b9;
+        }
+        
+        .tool-buttons {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 10px;
+        }
+        
+        .tool-button {
+            flex: 1;
+        }
+        
+        .tool-button.active {
+            background-color: #16a085;
+        }
+        
+        .results {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+        }
+        
+        .result-item {
+            margin-bottom: 10px;
+            padding: 10px;
+            background-color: white;
+            border-left: 4px solid #3498db;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Maze Solver</h1>
+        
+        <div class="controls">
+            <div>
+                <label for="rows">Rows:</label>
+                <input type="number" id="rows" min="3" max="20" value="10">
+                
+                <label for="cols">Columns:</label>
+                <input type="number" id="cols" min="3" max="20" value="10">
+                
+                <button id="createBtn">Create Grid</button>
+            </div>
+            
+            <div class="tool-buttons">
+                <button class="tool-button active" data-tool="wall">Wall</button>
+                <button class="tool-button" data-tool="start">Start</button>
+                <button class="tool-button" data-tool="end">End</button>
+                <button class="tool-button" data-tool="erase">Erase</button>
+            </div>
+            
+            <button id="randomBtn">Random Maze</button>
+            <button id="clearBtn">Clear All</button>
+            <button id="runBtn">Run Algorithms</button>
+        </div>
+        
+        <div id="mazeGrid" class="maze-grid"></div>
+        
+        <div class="results" id="results">
+            <h2>Algorithm Results</h2>
+            <p>Run the algorithms to see results.</p>
+        </div>
+    </div>
+    
+    <script>
+        // Global variables
+        let rows = 10, cols = 10;
+        let maze = [];
+        let startPos = null;
+        let endPos = null;
+        let currentTool = 'wall';
+        let isMouseDown = false;
+        
+        // DOM elements
+        const mazeGrid = document.getElementById('mazeGrid');
+        const rowsInput = document.getElementById('rows');
+        const colsInput = document.getElementById('cols');
+        const createBtn = document.getElementById('createBtn');
+        const randomBtn = document.getElementById('randomBtn');
+        const clearBtn = document.getElementById('clearBtn');
+        const runBtn = document.getElementById('runBtn');
+        const resultsDiv = document.getElementById('results');
+        const toolButtons = document.querySelectorAll('.tool-button');
+        
+        // Initialize
+        createMazeGrid();
+        
+        // Event listeners
+        createBtn.addEventListener('click', createMazeGrid);
+        randomBtn.addEventListener('click', generateRandomMaze);
+        clearBtn.addEventListener('click', clearMaze);
+        runBtn.addEventListener('click', runAlgorithms);
+        
+        document.addEventListener('mousedown', () => { isMouseDown = true; });
+        document.addEventListener('mouseup', () => { isMouseDown = false; });
+        
+        toolButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                toolButtons.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentTool = btn.dataset.tool;
+            });
+        });
+        
+        // Create maze grid
+        function createMazeGrid() {
+            rows = parseInt(rowsInput.value) || 10;
+            cols = parseInt(colsInput.value) || 10;
+            
+            // Reset maze data
+            maze = Array(rows).fill().map(() => Array(cols).fill(0));
+            startPos = null;
+            endPos = null;
+            
+            // Create grid UI
+            mazeGrid.innerHTML = '';
+            mazeGrid.style.gridTemplateColumns = `repeat(${cols}, 30px)`;
+            
+            for (let i = 0; i < rows; i++) {
+                for (let j = 0; j < cols; j++) {
+                    const cell = document.createElement('div');
+                    cell.className = 'cell';
+                    cell.dataset.row = i;
+                    cell.dataset.col = j;
+                    
+                    cell.addEventListener('mousedown', () => handleCellClick(i, j));
+                    cell.addEventListener('mouseover', () => {
+                        if (isMouseDown) handleCellClick(i, j);
+                    });
+                    
+                    mazeGrid.appendChild(cell);
+                }
+            }
+            
+            // Clear results
+            resultsDiv.innerHTML = '<h2>Algorithm Results</h2><p>Run the algorithms to see results.</p>';
+        }
+        
+        // Handle cell click
+        function handleCellClick(row, col) {
+            if (currentTool === 'wall') {
+                if (startPos && startPos.row === row && startPos.col === col) return;
+                if (endPos && endPos.row === row && endPos.col === col) return;
+                
+                maze[row][col] = 1;
+                updateCellClass(row, col, 'wall');
+            } 
+            else if (currentTool === 'start') {
+                if (startPos) {
+                    maze[startPos.row][startPos.col] = 0;
+                    updateCellClass(startPos.row, startPos.col, '');
+                }
+                
+                if (maze[row][col] === 1) return;
+                if (endPos && endPos.row === row && endPos.col === col) return;
+                
+                maze[row][col] = 0;
+                startPos = { row, col };
+                updateCellClass(row, col, 'start');
+            } 
+            else if (currentTool === 'end') {
+                if (endPos) {
+                    maze[endPos.row][endPos.col] = 0;
+                    updateCellClass(endPos.row, endPos.col, '');
+                }
+                
+                if (maze[row][col] === 1) return;
+                if (startPos && startPos.row === row && startPos.col === col) return;
+                
+                maze[row][col] = 0;
+                endPos = { row, col };
+                updateCellClass(row, col, 'end');
+            } 
+            else if (currentTool === 'erase') {
+                if (startPos && startPos.row === row && startPos.col === col) {
+                    startPos = null;
+                }
+                if (endPos && endPos.row === row && endPos.col === col) {
+                    endPos = null;
+                }
+                
+                maze[row][col] = 0;
+                updateCellClass(row, col, '');
+            }
+            
+            // Clear visualized paths
+            clearPaths();
+        }
+        
+        function updateCellClass(row, col, className) {
+            const cell = document.querySelector(`.cell[data-row="${row}"][data-col="${col}"]`);
+            cell.className = 'cell';
+            if (className) cell.classList.add(className);
+        }
+        
+        function generateRandomMaze() {
+            clearMaze();
+            
+            // Add random walls
+            for (let i = 0; i < rows; i++) {
+                for (let j = 0; j < cols; j++) {
+                    if (Math.random() < 0.3) {
+                        maze[i][j] = 1;
+                        updateCellClass(i, j, 'wall');
+                    }
+                }
+            }
+            
+            // Set random start and end
+            let startRow, startCol, endRow, endCol;
+            
+            do {
+                startRow = Math.floor(Math.random() * rows);
+                startCol = Math.floor(Math.random() * cols);
+            } while (maze[startRow][startCol] === 1);
+            
+            startPos = { row: startRow, col: startCol };
+            updateCellClass(startRow, startCol, 'start');
+            
+            do {
+                endRow = Math.floor(Math.random() * rows);
+                endCol = Math.floor(Math.random() * cols);
+            } while (maze[endRow][endCol] === 1 || 
+                    (startRow === endRow && startCol === endCol));
+            
+            endPos = { row: endRow, col: endCol };
+            updateCellClass(endRow, endCol, 'end');
+        }
+        
+        function clearMaze() {
+            maze = Array(rows).fill().map(() => Array(cols).fill(0));
+            startPos = null;
+            endPos = null;
+            
+            const cells = document.querySelectorAll('.cell');
+            cells.forEach(cell => {
+                cell.className = 'cell';
+            });
+            
+            // Clear results
+            resultsDiv.innerHTML = '<h2>Algorithm Results</h2><p>Run the algorithms to see results.</p>';
+        }
+        
+        function clearPaths() {
+            const cells = document.querySelectorAll('.cell.path');
+            cells.forEach(cell => {
+                const row = parseInt(cell.dataset.row);
+                const col = parseInt(cell.dataset.col);
+                
+                if (startPos && startPos.row === row && startPos.col === col) {
+                    cell.className = 'cell start';
+                } else if (endPos && endPos.row === row && endPos.col === col) {
+                    cell.className = 'cell end';
+                } else if (maze[row][col] === 1) {
+                    cell.className = 'cell wall';
+                } else {
+                    cell.className = 'cell';
+                }
+            });
+        }
+        
+        // Convert coordinates to ID
+        function coordToId(row, col) {
+            return row * cols + col;
+        }
+        
+        // Convert ID to coordinates
+        function idToCoord(id) {
+            return {
+                row: Math.floor(id / cols),
+                col: id % cols
+            };
+        }
+        
+        // Build graph from maze
+        function buildGraph() {
+            const graph = {};
+            const dx = [-1, 1, 0, 0];
+            const dy = [0, 0, -1, 1];
+            
+            for (let i = 0; i < rows; i++) {
+                for (let j = 0; j < cols; j++) {
+                    if (maze[i][j] === 1) continue; // Skip walls
+                    
+                    const nodeId = coordToId(i, j);
+                    graph[nodeId] = [];
+                    
+                    for (let d = 0; d < 4; d++) {
+                        const ni = i + dx[d];
+                        const nj = j + dy[d];
+                        
+                        if (ni >= 0 && ni < rows && nj >= 0 && nj < cols && maze[ni][nj] === 0) {
+                            const neighborId = coordToId(ni, nj);
+                            graph[nodeId].push({ to: neighborId, weight: 1.0 });
+                        }
+                    }
+                }
+            }
+            
+            return graph;
+        }
+        
+        // Priority Queue for Dijkstra
+        class PriorityQueue {
+            constructor() {
+                this.elements = [];
+            }
+            
+            enqueue(element, priority) {
+                this.elements.push({ element, priority });
+                this.elements.sort((a, b) => a.priority - b.priority);
+            }
+            
+            dequeue() {
+                return this.elements.shift();
+            }
+            
+            isEmpty() {
+                return this.elements.length === 0;
+            }
+        }
+        
+        // Dijkstra's Algorithm
+        function dijkstraAlgorithm(graph, start, end) {
+            const startTime = performance.now();
+            
+            const dist = {};
+            const prev = {};
+            const pq = new PriorityQueue();
+            
+            // Initialize
+            for (const node in graph) {
+                dist[node] = Infinity;
+                prev[node] = null;
+            }
+            dist[start] = 0;
+            pq.enqueue(start, 0);
+            
+            // Main algorithm
+            while (!pq.isEmpty()) {
+                const { element: u, priority } = pq.dequeue();
+                
+                if (u == end) break;
+                
+                for (const edge of graph[u]) {
+                    const v = edge.to;
+                    const alt = dist[u] + edge.weight;
+                    
+                    if (alt < dist[v]) {
+                        dist[v] = alt;
+                        prev[v] = u;
+                        pq.enqueue(v, alt);
+                    }
+                }
+            }
+            
+            // Reconstruct path
+            const path = [];
+            let current = end;
+            
+            while (current !== null) {
+                path.unshift(current);
+                current = prev[current];
+            }
+            
+            const endTime = performance.now();
+            
+            return {
+                path: path[0] === start ? path : [],
+                cost: dist[end],
+                time: (endTime - startTime) / 1000
+            };
+        }
+        
+        // Bellman-Ford Algorithm
+        function bellmanFordAlgorithm(graph, start, end) {
+            const startTime = performance.now();
+
+            const dist = {};
+            const prev = {};
+
+            // Initialize distances and predecessors
+            for (const node in graph) {
+                dist[node] = Infinity;
+                prev[node] = null;
+            }
+            dist[start] = 0;
+
+            const nodes = Object.keys(graph);
+
+            // Relax all edges |V| - 1 times
+            for (let i = 0; i < nodes.length - 1; i++) {
+                for (const u in graph) {
+                    for (const edge of graph[u]) {
+                        const v = edge.to;
+                        const weight = edge.weight;
+
+                        if (dist[u] !== Infinity && dist[u] + weight < dist[v]) {
+                            dist[v] = dist[u] + weight;
+                            prev[v] = u;
+                        }
+                    }
+                }
+            }
+
+            // Check for negative-weight cycles
+            for (const u in graph) {
+                for (const edge of graph[u]) {
+                    const v = edge.to;
+                    const weight = edge.weight;
+
+                    if (dist[u] !== Infinity && dist[u] + weight < dist[v]) {
+                        throw new Error("Graph contains a negative-weight cycle");
+                    }
+                }
+            }
+
+            // Reconstruct path from end to start
+            const path = [];
+            let current = end;
+
+            while (current !== null) {
+                path.unshift(current);
+                current = prev[current];
+            }
+
+            const endTime = performance.now();
+
+            return {
+                path: dist[end] !== Infinity ? path : [],
+                cost: dist[end],
+                time: (endTime - startTime) / 1000
+            };
+        }
+
+        
+        // Floyd-Warshall Algorithm
+        function floydWarshallAlgorithm(graph, start, end) {
+            const startTime = performance.now();
+            
+            // Initialize distance matrix
+            const dist = {};
+            const next = {};
+            
+            for (const u in graph) {
+                dist[u] = {};
+                next[u] = {};
+                
+                for (const v in graph) {
+                    dist[u][v] = Infinity;
+                    next[u][v] = null;
+                }
+                
+                dist[u][u] = 0;
+                
+                for (const edge of graph[u]) {
+                    const v = edge.to;
+                    dist[u][v] = edge.weight;
+                    next[u][v] = v;
+                }
+            }
+            
+            // Main algorithm
+            for (const k in graph) {
+                for (const i in graph) {
+                    for (const j in graph) {
+                        if (dist[i][k] + dist[k][j] < dist[i][j]) {
+                            dist[i][j] = dist[i][k] + dist[k][j];
+                            next[i][j] = next[i][k];
+                        }
+                    }
+                }
+            }
+            
+            // Reconstruct path
+            const path = [];
+            if (dist[start][end] === Infinity) {
+                // No path exists
+            } else {
+                let current = start;
+                while (current !== end) {
+                    path.push(current);
+                    current = next[current][end];
+                    if (current === null) break;
+                }
+                if (current === end) {
+                    path.push(end);
+                }
+            }
+            
+            const endTime = performance.now();
+            
+            return {
+                path: path,
+                cost: dist[start][end],
+                time: (endTime - startTime) / 1000
+            };
+        }
+        
+        // Visualize path
+        function visualizePath(path) {
+            clearPaths();
+            
+            for (const id of path) {
+                const { row, col } = idToCoord(id);
+                
+                if ((startPos && startPos.row === row && startPos.col === col) ||
+                    (endPos && endPos.row === row && endPos.col === col)) {
+                    continue;
+                }
+                
+                updateCellClass(row, col, 'path');
+            }
+        }
+        
+        // Run algorithms
+        function runAlgorithms() {
+            if (!startPos || !endPos) {
+                alert('Please set start and end points');
+                return;
+            }
+            
+            clearPaths();
+            
+            const graph = buildGraph();
+            const startId = coordToId(startPos.row, startPos.col);
+            const endId = coordToId(endPos.row, endPos.col);
+            
+            const results = [];
+            
+            // Run Dijkstra
+            const dijkstraResult = dijkstraAlgorithm(graph, startId, endId);
+            results.push({ name: 'Dijkstra', ...dijkstraResult });
+            
+            // Run Bellman-Ford
+            const bellmanFordResult = bellmanFordAlgorithm(graph, startId, endId);
+            results.push({ name: 'Bellman-Ford', ...bellmanFordResult });
+            
+            // Run Floyd-Warshall
+            const floydWarshallResult = floydWarshallAlgorithm(graph, startId, endId);
+            results.push({ name: 'Floyd-Warshall', ...floydWarshallResult });
+            
+            // Display results
+            displayResults(results);
+            
+            // Visualize the fastest algorithm's path
+            const fastest = results.reduce((prev, current) => 
+                prev.time < current.time ? prev : current);
+            
+            visualizePath(fastest.path);
+        }
+        
+        // Display results
+        function displayResults(results) {
+            resultsDiv.innerHTML = '<h2>Algorithm Results</h2>';
+            
+            // Find fastest algorithm
+            const fastest = results.reduce((prev, current) => 
+                prev.time < current.time ? prev : current);
+            
+            // Sort by execution time
+            results.sort((a, b) => a.time - b.time);
+            
+            for (const result of results) {
+                const resultItem = document.createElement('div');
+                resultItem.className = 'result-item';
+                
+                if (result.name === fastest.name) {
+                    resultItem.style.borderLeftColor = '#e74c3c';
+                }
+                
+                resultItem.innerHTML = `
+                    <h3>${result.name} ${result.name === fastest.name ? '(Fastest)' : ''}</h3>
+                    <p>Execution Time: ${result.time.toFixed(6)} seconds</p>
+                    <p>Path Length: ${result.path.length}</p>
+                    <p>Path Cost: ${result.cost === Infinity ? 'No path found' : result.cost}</p>
+                `;
+                
+                resultsDiv.appendChild(resultItem);
+            }
+        }
+    </script>
+</body>
+</html>
