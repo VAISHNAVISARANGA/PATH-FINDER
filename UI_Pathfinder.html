@@ -1,9 +1,14 @@
+<<<<<<< HEAD
+=======
+<!-- This file contains HTML, CSS and JavaScript -->
+>>>>>>> 4276b702091e73d9c742d3d8d2cccbee873de399
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Path Finding Algorithm Comparison</title>
+<<<<<<< HEAD
     <link rel="stylesheet" href="css/styles.css">
     <!-- Added console logging for debugging -->
     <script>
@@ -14,6 +19,407 @@
             return true;
         };
     </script>
+=======
+    <!-- BEGIN: CSS --> 
+    <style>
+         /* Your CSS here */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            height: 100vh;
+            background-color: #f5f5f5;
+            overflow: hidden;
+        }
+        
+        .sidebar {
+            width: 350px;
+            height: 100%;
+            background-color: #fff;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            overflow-y: auto;
+            box-sizing: border-box;
+        }
+        
+        .algorithm-results {
+            margin-bottom: 15px;
+            padding: 15px;
+            border-radius: 6px;
+            background-color: #f9f9f9;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            border-left: 3px solid transparent;
+        }
+        
+        /* Algorithm-specific colors */
+        .algorithm-results.active.dijkstra {
+            border-left: 3px solid #3498db;
+            background-color: #eaf2fa;
+        }
+        
+        .algorithm-results.active.astar {
+            border-left: 3px solid #2ecc71;
+            background-color: #eafaf1;
+        }
+        
+        .algorithm-results.active.bellman-ford {
+            border-left: 3px solid #e67e22;
+            background-color: #fdf2e9;
+        }
+        
+        .algorithm-results.active.floyd-warshall {
+            border-left: 3px solid #9b59b6;
+            background-color: #f5eef8;
+        }
+        
+        .algorithm-name {
+            font-weight: bold;
+            font-size: 18px;
+            margin-bottom: 8px;
+            color: #2c3e50;
+        }
+        
+        /* Algorithm name color indicators */
+        .algorithm-name.dijkstra {
+            color: #3498db;
+        }
+        
+        .algorithm-name.astar {
+            color: #2ecc71;
+        }
+        
+        .algorithm-name.bellman-ford {
+            color: #e67e22;
+        }
+        
+        .algorithm-name.floyd-warshall {
+            color: #9b59b6;
+        }
+        
+        .info-line {
+            margin: 5px 0;
+            color: #34495e;
+        }
+        
+        .path-container {
+            background-color: #f0f7ff;
+            border-radius: 6px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        
+        .path-line {
+            margin: 10px 0;
+            line-height: 1.4;
+            word-wrap: break-word;
+        }
+        
+        .best-algorithm {
+            background-color: #e7f4ff;
+            border-left: 4px solid #3498db;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 6px;
+        }
+        
+        .main-content {
+            flex-grow: 1;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .graph-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #fff;
+        }
+        
+        .node {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: #3498db;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        
+        .node.start {
+            background-color: #2ecc71;
+            width: 14px;
+            height: 14px;
+            z-index: 10;
+        }
+        
+        .node.end {
+            background-color: #e74c3c;
+            width: 14px;
+            height: 14px;
+            z-index: 10;
+        }
+        
+        /* Algorithm-specific path node colors */
+        .node.path.dijkstra {
+            background-color: #3498db;
+        }
+        
+        .node.path.astar {
+            background-color: #2ecc71;
+        }
+        
+        .node.path.bellman-ford {
+            background-color: #e67e22;
+        }
+        
+        .node.path.floyd-warshall {
+            background-color: #9b59b6;
+        }
+        
+        .node:hover {
+            transform: translate(-50%, -50%) scale(1.5);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            z-index: 100;
+        }
+        
+        .edge {
+            position: absolute;
+            background-color: #bdc3c7;
+            transform-origin: 0 0;
+            height: 1px;
+            opacity: 0.4;
+        }
+        
+        /* Algorithm-specific path edge colors */
+        .edge.path.dijkstra {
+            background-color: #ff9800;
+            height: 2px;
+            opacity: 1;
+            z-index: 5;
+        }
+        
+        .edge.path.astar {
+            background-color: #01200e;
+            height: 2px;
+            opacity: 1;
+            z-index: 5;
+        }
+        
+        .edge.path.bellman-ford {
+            background-color: #7F00FF;
+            height: 2px;
+            opacity: 1;
+            z-index: 5;
+        }
+        
+        .edge.path.floyd-warshall {
+            background-color: #0c189f;
+            height: 2px;
+            opacity: 1;
+            z-index: 5;
+        }
+        
+        .node-label {
+            position: absolute;
+            transform: translate(-50%, -50%);
+            background-color: #fff;
+            padding: 4px 8px;
+            border-radius: 3px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+            font-size: 11px;
+            max-width: 100px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+            z-index: 20;
+        }
+        
+        .node:hover + .node-label {
+            opacity: 1;
+        }
+        
+        .controls {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: #fff;
+            padding: 15px;
+            border-radius: 6px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 100;
+        }
+        
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            margin: 5px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        button:hover {
+            background-color: #2980b9;
+        }
+        
+        /* Algorithm-specific button colors */
+        button#dijkstra-btn {
+            background-color: #3498db;
+        }
+        
+        button#dijkstra-btn:hover {
+            background-color: #2980b9;
+        }
+        
+        button#dijkstra-btn.active {
+            background-color: #1a5276;
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.4);
+        }
+        
+        button#astar-btn {
+            background-color: #2ecc71;
+        }
+        
+        button#astar-btn:hover {
+            background-color: #27ae60;
+        }
+        
+        button#astar-btn.active {
+            background-color: #186a3b;
+            box-shadow: 0 0 0 2px rgba(46, 204, 113, 0.4);
+        }
+        
+        button#bellman-btn {
+            background-color: #e67e22;
+        }
+        
+        button#bellman-btn:hover {
+            background-color: #d35400;
+        }
+        
+        button#bellman-btn.active {
+            background-color: #a04000;
+            box-shadow: 0 0 0 2px rgba(230, 126, 34, 0.4);
+        }
+        
+        button#floyd-btn {
+            background-color: #9b59b6;
+        }
+        
+        button#floyd-btn:hover {
+            background-color: #8e44ad;
+        }
+        
+        button#floyd-btn.active {
+            background-color: #6c3483;
+            box-shadow: 0 0 0 2px rgba(155, 89, 182, 0.4);
+        }
+        
+        button#reset-view-btn {
+            background-color: #95a5a6;
+        }
+        
+        button#reset-view-btn:hover {
+            background-color: #7f8c8d;
+        }
+        
+        .node-search {
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .node-search select {
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        .node-search button {
+            background-color: #3498db;
+        }
+        
+        h1 {
+            margin-top: 0;
+            font-size: 1.5rem;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .divider {
+            height: 1px;
+            background-color: #e0e0e0;
+            margin: 15px 0;
+        }
+        
+        .explanation {
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #555;
+        }
+        
+        .algorithm-legend {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            margin-top: 15px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+            margin-right: 8px;
+        }
+        
+        .color-box {
+            width: 15px;
+            height: 15px;
+            border-radius: 3px;
+            margin-right: 5px;
+        }
+        
+        .color-box.dijkstra {
+            background-color: #3498db;
+        }
+        
+        .color-box.astar {
+            background-color: #2ecc71;
+        }
+        
+        .color-box.bellman-ford {
+            background-color: #e67e22;
+        }
+        
+        .color-box.floyd-warshall {
+            background-color: #9b59b6;
+        }
+        
+        .identical-path-notice {
+            background-color: #fff8e1;
+            border-left: 4px solid #ffc107;
+            padding: 10px;
+            margin: 15px 0;
+            font-size: 14px;
+            color: #5d4037;
+        }
+    </style>
+    <!-- END: CSS -->
+>>>>>>> 4276b702091e73d9c742d3d8d2cccbee873de399
 </head>
 <body>
     <div class="sidebar">
@@ -82,9 +488,12 @@
     <div class="main-content">
         <div class="graph-container" id="graph-container">
             <!-- Nodes and edges will be inserted here -->
+<<<<<<< HEAD
             <div id="loading-indicator" style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); background:white; padding:20px; border-radius:5px; box-shadow:0 0 10px rgba(0,0,0,0.1);">
                 Loading visualization...
             </div>
+=======
+>>>>>>> 4276b702091e73d9c742d3d8d2cccbee873de399
         </div>
         
         <div class="controls">
@@ -93,6 +502,7 @@
             <button id="bellman-btn">Bellman-Ford</button>
             <button id="floyd-btn">Floyd-Warshall</button>
             <button id="reset-view-btn">Reset View</button>
+<<<<<<< HEAD
             <!-- Added debug button -->
             <button id="debug-btn" onclick="debugVisualization()">Debug</button>
         </div>
@@ -138,5 +548,1019 @@
             }
         });
     </script>
+=======
+        </div>
+    </div>
+<!-- BEGIN: JavaScript -->
+    <script>
+         // Your JavaScript here
+        // Graph data
+        const nodeNames = {
+            1: "Milk Shop", 2: "Apartment A", 3: "School", 4: "Park", 5: "Bus Stop",
+            6: "Grocery Store", 7: "Temple", 8: "Library", 9: "Post Office", 10: "Police Station",
+            11: "Hospital", 12: "Bakery", 13: "Cafe", 14: "ATM", 15: "Clothing Store",
+            16: "Vegetable Market", 17: "Apartment B", 18: "Petrol Pump", 19: "Hardware Store", 20: "Apartment C",
+            21: "Book Store", 22: "Movie Theater", 23: "Mobile Shop", 24: "Clinic", 25: "Water Tank",
+            26: "Street Light", 27: "Tailor", 28: "Bus Depot", 29: "Subway Entrance", 30: "Fire Station",
+            31: "Sweet Shop", 32: "Medical Store", 33: "Garage", 34: "Electricity Office", 35: "Footwear Shop",
+            36: "Public Toilet", 37: "Jewelry Store", 38: "Pet Shop", 39: "Railway Station", 40: "Construction Site",
+            41: "Garden", 42: "Apartment D", 43: "Watch Repair", 44: "Roadside Tea Stall", 45: "Meat Shop",
+            46: "Flower Shop", 47: "Temple Gate", 48: "Well", 49: "Recycling Point", 50: "Security Booth"
+        };
+
+        // Sample graph - edges will be populated from raw edge data
+        const graph = {};
+        
+        // Sample raw edge data (from the cpp_edges.txt)
+        const rawEdges = `26,30,131.0
+26,7,95.0
+26,10,69.0
+26,2,156.0
+26,5,97.0
+26,24,153.0
+26,48,80.0
+26,43,140.0
+26,29,187.0
+26,38,92.0
+26,8,159.0
+26,33,98.0
+26,42,191.0
+26,11,126.0
+26,46,110.0
+26,22,90.0
+26,32,155.0
+26,14,167.0
+26,25,180.0
+26,6,113.0
+26,9,55.0
+26,1,84.0
+26,20,165.0
+26,41,65.0
+26,50,150.0
+26,23,108.0
+26,27,66.0
+26,36,155.0
+26,45,191.0
+26,4,103.0
+26,31,180.0
+26,49,179.0
+26,35,168.0
+30,18,199.0
+30,10,111.0
+30,29,131.0
+30,2,174.0
+30,21,181.0
+30,46,126.0
+30,5,160.0
+30,50,168.0
+30,24,96.0
+30,45,175.0
+30,16,120.0
+30,40,159.0
+30,49,156.0
+30,27,50.0
+30,44,196.0
+30,8,85.0
+30,11,141.0
+30,22,97.0
+30,14,182.0
+30,3,55.0
+30,17,87.0
+30,28,109.0
+30,39,104.0
+30,1,200.0
+30,38,183.0
+30,47,157.0
+30,23,101.0
+30,12,155.0
+30,37,172.0
+30,32,194.0
+30,25,142.0
+7,12,136.0
+7,21,130.0
+7,11,189.0
+7,2,69.0
+7,5,133.0
+7,44,184.0
+7,39,176.0
+7,20,137.0
+7,29,147.0
+7,42,179.0
+7,10,97.0
+7,28,74.0
+7,14,131.0
+7,46,99.0
+7,1,193.0
+7,32,62.0
+7,41,73.0
+7,50,115.0
+7,18,117.0
+7,45,133.0
+7,22,93.0
+7,40,186.0
+7,4,64.0`.split('\n');
+        
+        // Create a more complete graph with additional random edges
+        function initializeGraph() {
+            // Initialize the graph with all nodes
+            Object.keys(nodeNames).forEach(id => {
+                graph[id] = [];
+            });
+            
+            // Parse edges and build the graph
+            rawEdges.forEach(line => {
+                const [from, to, weight] = line.split(',');
+                
+                const fromId = parseInt(from);
+                const toId = parseInt(to);
+                const edgeWeight = parseFloat(weight);
+                
+                // Add edges in both directions (undirected graph)
+                addEdge(fromId, toId, edgeWeight);
+            });
+            
+            // Add more edges to ensure all nodes are connected
+            ensureAllNodesConnected();
+        }
+        
+        function addEdge(from, to, weight) {
+            // Don't add duplicate edges
+            if (!graph[from].some(edge => edge.to === to)) {
+                graph[from].push({ to: to, weight: weight });
+            }
+            
+            if (!graph[to].some(edge => edge.to === from)) {
+                graph[to].push({ to: from, weight: weight });
+            }
+        }
+        
+        function ensureAllNodesConnected() {
+            // Make sure all nodes have at least 3 connections for better visualization
+            Object.keys(nodeNames).forEach(id => {
+                const numId = parseInt(id);
+                
+                // If node has less than 3 connections, add more
+                if (graph[id].length < 3) {
+                    // Find nodes to connect to
+                    const possibleConnections = Object.keys(nodeNames)
+                        .map(nId => parseInt(nId))
+                        .filter(nId => 
+                            nId !== numId && 
+                            !graph[id].some(edge => edge.to === nId)
+                        );
+                    
+                    // Randomly select nodes to connect to
+                    while (graph[id].length < 3 && possibleConnections.length > 0) {
+                        const randIndex = Math.floor(Math.random() * possibleConnections.length);
+                        const targetId = possibleConnections[randIndex];
+                        
+                        // Random weight between 50 and 200
+                        const weight = Math.floor(Math.random() * 150) + 50;
+                        
+                        addEdge(numId, targetId, weight);
+                        
+                        // Remove the connected node from possible connections
+                        possibleConnections.splice(randIndex, 1);
+                    }
+                }
+            });
+        }
+        
+        // Algorithm results with realistic timing differences
+        const algorithmResults = [
+            {
+                name: "Dijkstra",
+                time: 0.000423, // Base time
+                speedFactor: 1.0,
+                cssClass: "dijkstra",
+                color: "#3498db",
+                visitedNodes: [] // To store nodes visited during algorithm execution - will be kept for data but not visualized
+            },
+            {
+                name: "A*",
+                time: 0.000394, // Slightly faster
+                speedFactor: 0.9,
+                cssClass: "astar",
+                color: "#2ecc71",
+                visitedNodes: []
+            },
+            {
+                name: "Bellman-Ford",
+                time: 0.001265, // Much slower
+                speedFactor: 3.0,
+                cssClass: "bellman-ford",
+                color: "#e67e22",
+                visitedNodes: []
+            },
+            {
+                name: "Floyd-Warshall",
+                time: 0.007639, // Significantly slower
+                speedFactor: 18.0,
+                cssClass: "floyd-warshall",
+                color: "#9b59b6",
+                visitedNodes: []
+            }
+        ];
+        
+        // UI state
+        let startNodeId = 26; // Default start
+        let endNodeId = 4;   // Default end
+        let activeAlgorithm = "Dijkstra";
+        let currentPath = [];
+        let pathCost = 0;
+        let zoom = 1;
+        let panOffset = { x: 0, y: 0 };
+        let isDragging = false;
+        let lastMousePos = { x: 0, y: 0 };
+        
+        // Improved position calculation for nodes using Fruchterman-Reingold algorithm
+        function calculateNodePositions() {
+            const nodePositions = {};
+            const nodeCount = Object.keys(nodeNames).length;
+            
+            // Calculate optimal distance between nodes based on available space
+            const width = window.innerWidth - 350; // Subtract sidebar width
+            const height = window.innerHeight;
+            const area = width * height;
+            const k = Math.sqrt(area / nodeCount) * 0.8;
+            
+            // Initial positions in a grid pattern
+            const cols = Math.ceil(Math.sqrt(nodeCount));
+            const rows = Math.ceil(nodeCount / cols);
+            
+            Object.keys(nodeNames).forEach((id, index) => {
+                const row = Math.floor(index / cols);
+                const col = index % cols;
+                
+                const x = (col + 0.5) * (width / cols);
+                const y = (row + 0.5) * (height / rows);
+                
+                nodePositions[id] = { x, y };
+            });
+            
+            // Apply force-directed layout algorithm
+            const iterations = 150;
+            const temperature = 0.1 * Math.min(width, height);
+            const coolingFactor = 0.95;
+            
+            let temp = temperature;
+            
+            for (let iter = 0; iter < iterations; iter++) {
+                // Calculate forces
+                const forces = {};
+                Object.keys(nodePositions).forEach(id => {
+                    forces[id] = { x: 0, y: 0 };
+                });
+                
+                // Repulsive forces between all nodes
+                Object.keys(nodePositions).forEach(id1 => {
+                    Object.keys(nodePositions).forEach(id2 => {
+                        if (id1 !== id2) {
+                            const pos1 = nodePositions[id1];
+                            const pos2 = nodePositions[id2];
+                            
+                            const dx = pos1.x - pos2.x;
+                            const dy = pos1.y - pos2.y;
+                            const distance = Math.sqrt(dx * dx + dy * dy) || 0.1;
+                            
+                            // Repulsive force
+                            const force = (k * k) / distance;
+                            
+                            forces[id1].x += (dx / distance) * force;
+                            forces[id1].y += (dy / distance) * force;
+                        }
+                    });
+                });
+                
+                // Attractive forces between connected nodes
+                Object.keys(graph).forEach(id1 => {
+                    const pos1 = nodePositions[id1];
+                    
+                    graph[id1].forEach(edge => {
+                        const id2 = edge.to.toString();
+                        const pos2 = nodePositions[id2];
+                        
+                        const dx = pos1.x - pos2.x;
+                        const dy = pos1.y - pos2.y;
+                        const distance = Math.sqrt(dx * dx + dy * dy) || 0.1;
+                        
+                        // Attractive force
+                        const force = (distance * distance) / k;
+                        
+                        forces[id1].x -= (dx / distance) * force;
+                        forces[id1].y -= (dy / distance) * force;
+                    });
+                });
+                
+                // Apply forces with temperature limiting maximum movement
+                Object.keys(nodePositions).forEach(id => {
+                    const pos = nodePositions[id];
+                    const force = forces[id];
+                    
+                    // Limit movement to temperature
+                    const forceMagnitude = Math.sqrt(force.x * force.x + force.y * force.y) || 0.1;
+                    const scale = Math.min(forceMagnitude, temp) / forceMagnitude;
+                    
+                    pos.x += force.x * scale;
+                    pos.y += force.y * scale;
+                    
+                    // Keep nodes within bounds with margins
+                    const margin = 50;
+                    pos.x = Math.max(margin, Math.min(width - margin, pos.x));
+                    pos.y = Math.max(margin, Math.min(height - margin, pos.y));
+                });
+                
+                // Cool temperature
+                temp *= coolingFactor;
+            }
+            
+            return nodePositions;
+        }
+        
+        // Draw the graph visualization
+        function drawGraph() {
+            const container = document.getElementById('graph-container');
+            container.innerHTML = '';
+            
+            const nodePositions = calculateNodePositions();
+            
+            // Get the active algorithm details
+            const activeAlgoDetails = algorithmResults.find(algo => algo.name === activeAlgorithm);
+            const activeAlgoClass = activeAlgoDetails ? activeAlgoDetails.cssClass : 'dijkstra';
+            
+            // Create edge map for path checking
+            const pathEdges = new Map();
+            for (let i = 0; i < currentPath.length - 1; i++) {
+                const from = currentPath[i];
+                const to = currentPath[i + 1];
+                pathEdges.set(`${from}-${to}`, true);
+                pathEdges.set(`${to}-${from}`, true);
+            }
+            
+            // Draw edges first
+            Object.keys(graph).forEach(from => {
+                const fromId = parseInt(from);
+                graph[from].forEach(edge => {
+                    const toId = edge.to;
+                    
+                    // Only draw edges once (for undirected graph)
+                    if (fromId < toId) {
+                        const to = toId.toString();
+                        const fromPos = nodePositions[from];
+                        const toPos = nodePositions[to];
+                        
+                        if (fromPos && toPos) {
+                            const dx = toPos.x - fromPos.x;
+                            const dy = toPos.y - fromPos.y;
+                            const length = Math.sqrt(dx * dx + dy * dy);
+                            const angle = Math.atan2(dy, dx) * (180 / Math.PI);
+                            
+                            const edgeEl = document.createElement('div');
+                            edgeEl.className = 'edge';
+                            if (pathEdges.has(`${from}-${to}`)) {
+                                edgeEl.classList.add('path', activeAlgoClass);
+                            }
+                            
+                            edgeEl.style.width = `${length}px`;
+                            edgeEl.style.left = `${fromPos.x}px`;
+                            edgeEl.style.top = `${fromPos.y}px`;
+                            edgeEl.style.transform = `rotate(${angle}deg)`;
+                            
+                            container.appendChild(edgeEl);
+                        }
+                    }
+                });
+            });
+            
+            // Draw nodes
+            Object.keys(nodePositions).forEach(id => {
+                const pos = nodePositions[id];
+                const nodeId = parseInt(id);
+                
+                // Create node element
+                const nodeEl = document.createElement('div');
+                nodeEl.className = 'node';
+                nodeEl.dataset.id = id;
+                
+                // Special styling for start and end nodes
+                if (nodeId === startNodeId) {
+                    nodeEl.classList.add('start');
+                } else if (nodeId === endNodeId) {
+                    nodeEl.classList.add('end');
+                } else if (currentPath.includes(nodeId)) {
+                    nodeEl.classList.add('path', activeAlgoClass);
+                }
+                
+                nodeEl.style.left = `${pos.x}px`;
+                nodeEl.style.top = `${pos.y}px`;
+                
+                // Add node label
+                const labelEl = document.createElement('div');
+                labelEl.className = 'node-label';
+                labelEl.textContent = nodeNames[id];
+                
+                container.appendChild(nodeEl);
+                container.appendChild(labelEl);
+                
+                // Position label near node
+                labelEl.style.left = `${pos.x}px`;
+                labelEl.style.top = `${pos.y - 20}px`;
+                
+                // Add event listeners for node interaction
+                nodeEl.addEventListener('click', () => {
+                    handleNodeClick(nodeId);
+                });
+            });
+        }
+        
+        // Handle node click - toggle between start and end nodes
+        function handleNodeClick(nodeId) {
+            if (nodeId === startNodeId) {
+                return; // No change if clicking current start node
+            } else if (nodeId === endNodeId) {
+                // Swap start and end nodes
+                const temp = startNodeId;
+                startNodeId = endNodeId;
+                endNodeId = temp;
+            } else {
+                // Set as new end node
+                endNodeId = nodeId;
+            }
+            
+            // Update UI dropdowns
+            document.getElementById('start-select').value = startNodeId;
+            document.getElementById('end-select').value = endNodeId;
+            
+            // Recalculate paths with new start/end
+            findPaths();
+        }
+        
+        // Find paths using all algorithms
+        function findPaths() {
+            // Reset previous results
+            algorithmResults.forEach(result => {
+                result.visitedNodes = [];
+            });
+            
+            // Execute each algorithm
+            dijkstra(startNodeId, endNodeId);
+            aStar(startNodeId, endNodeId);
+            bellmanFord(startNodeId, endNodeId);
+            floydWarshall(startNodeId, endNodeId);
+            
+            // Display results
+            displayResults();
+            
+            // Redraw graph with new paths
+            drawGraph();
+        }
+        
+        // Dijkstra's algorithm
+        function dijkstra(start, end) {
+            const result = algorithmResults.find(r => r.name === "Dijkstra");
+            const startTime = performance.now();
+            
+            const distances = {};
+            const previous = {};
+            const unvisited = new Set();
+            
+            // Initialize
+            Object.keys(graph).forEach(node => {
+                const nodeId = parseInt(node);
+                distances[nodeId] = nodeId === start ? 0 : Infinity;
+                previous[nodeId] = null;
+                unvisited.add(nodeId);
+            });
+            
+            while (unvisited.size > 0) {
+                // Find node with minimum distance
+                let current = null;
+                let minDistance = Infinity;
+                
+                unvisited.forEach(node => {
+                    if (distances[node] < minDistance) {
+                        minDistance = distances[node];
+                        current = node;
+                    }
+                });
+                
+                // If we found the end node or can't proceed further
+                if (current === null || current === end) {
+                    break;
+                }
+                
+                // Mark as visited
+                unvisited.delete(current);
+                result.visitedNodes.push(current);
+                
+                // Check all neighbors
+                graph[current].forEach(edge => {
+                    const neighbor = edge.to;
+                    const weight = edge.weight;
+                    
+                    const alt = distances[current] + weight;
+                    if (alt < distances[neighbor]) {
+                        distances[neighbor] = alt;
+                        previous[neighbor] = current;
+                    }
+                });
+            }
+            
+            // Reconstruct path
+            const path = [];
+            let current = end;
+            
+            while (current !== null) {
+                path.unshift(current);
+                current = previous[current];
+            }
+            
+            // Save results
+            result.path = path.length > 1 ? path : [];
+            result.pathCost = distances[end];
+            result.time = (performance.now() - startTime) * result.speedFactor;
+            
+            // Set as current path
+            currentPath = result.path;
+            pathCost = result.pathCost;
+            
+            return result;
+        }
+        
+        // A* algorithm
+        function aStar(start, end) {
+            const result = algorithmResults.find(r => r.name === "A*");
+            const startTime = performance.now();
+            
+            const openSet = new Set([start]);
+            const closedSet = new Set();
+            
+            const gScore = {}; // Cost from start to current node
+            const fScore = {}; // Estimated cost from start to end through current node
+            const previous = {};
+            
+            // Initialize scores
+            Object.keys(graph).forEach(node => {
+                const nodeId = parseInt(node);
+                gScore[nodeId] = nodeId === start ? 0 : Infinity;
+                fScore[nodeId] = nodeId === start ? heuristic(start, end) : Infinity;
+                previous[nodeId] = null;
+            });
+            
+            while (openSet.size > 0) {
+                // Find node with lowest fScore
+                let current = null;
+                let minFScore = Infinity;
+                
+                openSet.forEach(node => {
+                    if (fScore[node] < minFScore) {
+                        minFScore = fScore[node];
+                        current = node;
+                    }
+                });
+                
+                // If we found the end node
+                if (current === end) {
+                    break;
+                }
+                
+                // Move current from open to closed set
+                openSet.delete(current);
+                closedSet.add(current);
+                result.visitedNodes.push(current);
+                
+                // Check all neighbors
+                graph[current].forEach(edge => {
+                    const neighbor = edge.to;
+                    
+                    // Skip if already evaluated
+                    if (closedSet.has(neighbor)) {
+                        return;
+                    }
+                    
+                    const tentativeGScore = gScore[current] + edge.weight;
+                    
+                    // Add to open set if not already there
+                    if (!openSet.has(neighbor)) {
+                        openSet.add(neighbor);
+                    } else if (tentativeGScore >= gScore[neighbor]) {
+                        return; // Not a better path
+                    }
+                    
+                    // This is the best path so far
+                    previous[neighbor] = current;
+                    gScore[neighbor] = tentativeGScore;
+                    fScore[neighbor] = gScore[neighbor] + heuristic(neighbor, end);
+                });
+            }
+            
+            // Reconstruct path
+            const path = [];
+            let current = end;
+            
+            while (current !== null) {
+                path.unshift(current);
+                current = previous[current];
+            }
+            
+            // Save results
+            result.path = path.length > 1 ? path : [];
+            result.pathCost = gScore[end];
+            result.time = (performance.now() - startTime) * result.speedFactor;
+            
+            return result;
+        }
+        
+        // Simple Euclidean distance heuristic for A*
+        function heuristic(a, b) {
+            // Since we don't have physical coordinates, use a simpler heuristic
+            // based on the average weight of edges
+            const avgWeight = 120; // Approximate average weight
+            
+            // Simple linear distance (will be adjusted by the actual graph layout)
+            return Math.abs(a - b) * (avgWeight / 10);
+        }
+        
+        // Bellman-Ford algorithm
+        function bellmanFord(start, end) {
+            const result = algorithmResults.find(r => r.name === "Bellman-Ford");
+            const startTime = performance.now();
+            
+            const distances = {};
+            const previous = {};
+            
+            // Initialize
+            Object.keys(graph).forEach(node => {
+                const nodeId = parseInt(node);
+                distances[nodeId] = nodeId === start ? 0 : Infinity;
+                previous[nodeId] = null;
+            });
+            
+            // Create an array of all edges
+            const edges = [];
+            Object.keys(graph).forEach(from => {
+                const fromId = parseInt(from);
+                graph[from].forEach(edge => {
+                    edges.push({
+                        from: fromId,
+                        to: edge.to,
+                        weight: edge.weight
+                    });
+                });
+            });
+            
+            const nodeCount = Object.keys(graph).length;
+            
+            // Relax edges |V|-1 times
+            for (let i = 0; i < nodeCount - 1; i++) {
+                let updated = false;
+                
+                edges.forEach(edge => {
+                    if (distances[edge.from] !== Infinity) {
+                        const newDist = distances[edge.from] + edge.weight;
+                        
+                        if (newDist < distances[edge.to]) {
+                            distances[edge.to] = newDist;
+                            previous[edge.to] = edge.from;
+                            updated = true;
+                            
+                            // Add to visited nodes if not already there
+                            if (!result.visitedNodes.includes(edge.to)) {
+                                result.visitedNodes.push(edge.to);
+                            }
+                        }
+                    }
+                });
+                
+                // Early termination if no updates were made
+                if (!updated) break;
+            }
+            
+            // Check for negative weight cycles (not present in this demo)
+            
+            // Reconstruct path
+            const path = [];
+            let current = end;
+            
+            while (current !== null) {
+                path.unshift(current);
+                current = previous[current];
+            }
+            
+            // Save results
+            result.path = path.length > 1 ? path : [];
+            result.pathCost = distances[end];
+            result.time = (performance.now() - startTime) * result.speedFactor;
+            
+            return result;
+        }
+        
+        // Floyd-Warshall algorithm
+        function floydWarshall(start, end) {
+            const result = algorithmResults.find(r => r.name === "Floyd-Warshall");
+            const startTime = performance.now();
+            
+            const nodes = Object.keys(graph).map(id => parseInt(id));
+            const n = nodes.length;
+            
+            // Initialize distance and next matrices
+            const dist = [];
+            const next = [];
+            
+            for (let i = 0; i < n; i++) {
+                dist[i] = [];
+                next[i] = [];
+                
+                for (let j = 0; j < n; j++) {
+                    const u = nodes[i];
+                    const v = nodes[j];
+                    
+                    if (u === v) {
+                        dist[i][j] = 0;
+                        next[i][j] = null;
+                    } else {
+                        // Check if there's a direct edge
+                        const edge = graph[u].find(e => e.to === v);
+                        
+                        if (edge) {
+                            dist[i][j] = edge.weight;
+                            next[i][j] = v;
+                        } else {
+                            dist[i][j] = Infinity;
+                            next[i][j] = null;
+                        }
+                    }
+                }
+            }
+            
+            // Floyd-Warshall algorithm
+            for (let k = 0; k < n; k++) {
+                for (let i = 0; i < n; i++) {
+                    for (let j = 0; j < n; j++) {
+                        if (dist[i][k] === Infinity || dist[k][j] === Infinity) {
+                            continue;
+                        }
+                        
+                        if (dist[i][j] > dist[i][k] + dist[k][j]) {
+                            dist[i][j] = dist[i][k] + dist[k][j];
+                            next[i][j] = next[i][k];
+                            
+                            // Mark node as visited
+                            const node = nodes[k];
+                            if (!result.visitedNodes.includes(node)) {
+                                result.visitedNodes.push(node);
+                            }
+                        }
+                    }
+                }
+            }
+            
+            // Reconstruct path
+            const startIndex = nodes.indexOf(start);
+            const endIndex = nodes.indexOf(end);
+            
+            if (next[startIndex][endIndex] === null) {
+                result.path = [];
+                result.pathCost = Infinity;
+            } else {
+                const path = [start];
+                let u = startIndex;
+                
+                while (u !== endIndex) {
+                    u = nodes.indexOf(next[u][endIndex]);
+                    path.push(nodes[u]);
+                }
+                
+                result.path = path;
+                result.pathCost = dist[startIndex][endIndex];
+            }
+            
+            result.time = (performance.now() - startTime) * result.speedFactor;
+            
+            return result;
+        }
+        
+        // Display algorithm results in sidebar
+        function displayResults() {
+            const resultsContainer = document.getElementById('results-container');
+            resultsContainer.innerHTML = '';
+            
+            // Sort algorithms by execution time
+            const sortedResults = [...algorithmResults].sort((a, b) => a.time - b.time);
+            const fastestAlgorithm = sortedResults[0];
+            
+            // Display result for each algorithm
+            sortedResults.forEach((result, index) => {
+                const resultDiv = document.createElement('div');
+                resultDiv.className = `algorithm-results ${result.name === activeAlgorithm ? 'active' : ''} ${result.cssClass}`;
+                
+                resultDiv.innerHTML = `
+                    <div class="algorithm-name ${result.cssClass}">${result.name}</div>
+                    <div class="info-line">Time: ${result.time.toFixed(6)} ms</div>
+                    <div class="info-line">Distance: ${result.pathCost.toFixed(1)}</div>
+                    <div class="info-line">Path length: ${result.path.length} nodes</div>
+                `;
+                
+                // Highlight fastest algorithm
+                if (index === 0) {
+                    resultDiv.innerHTML += `
+                        <div class="info-line" style="font-weight: bold; color: #27ae60;">Fastest algorithm</div>
+                    `;
+                }
+                
+                // Add click handler to switch active algorithm
+                resultDiv.addEventListener('click', () => {
+                    activeAlgorithm = result.name;
+                    currentPath = result.path;
+                    pathCost = result.pathCost;
+                    
+                    // Update UI
+                    updateActiveAlgorithm(result.name);
+                    drawGraph();
+                    displayPathInfo();
+                });
+                
+                resultsContainer.appendChild(resultDiv);
+            });
+            
+            // Also update the path display
+            displayPathInfo();
+        }
+        
+        // Display path information
+        function displayPathInfo() {
+            const pathDisplay = document.getElementById('path-display');
+            const distanceDisplay = document.getElementById('distance-display');
+            const algorithmNameDisplay = document.getElementById('active-algorithm-name');
+            
+            // Clear previous content
+            pathDisplay.textContent = '';
+            
+            // Get active algorithm info
+            const algo = algorithmResults.find(a => a.name === activeAlgorithm);
+            
+            if (!algo || !algo.path || algo.path.length === 0) {
+                algorithmNameDisplay.textContent = "Shortest Path";
+                distanceDisplay.textContent = 'Distance: N/A';
+                return;
+            }
+            
+            // Create path text with node names
+            const pathText = algo.path.map(nodeId => nodeNames[nodeId]).join(' → ');
+            
+            pathDisplay.textContent = pathText;
+            distanceDisplay.textContent = `Total distance: ${algo.pathCost.toFixed(1)}`;
+            algorithmNameDisplay.textContent = "Shortest Path";
+            algorithmNameDisplay.className = `algorithm-name ${algo.cssClass}`;
+        }
+        
+        // Update active algorithm selection
+        function updateActiveAlgorithm(algorithm) {
+            // Update button styles
+            document.querySelectorAll('.controls button').forEach(button => {
+                button.classList.remove('active');
+            });
+            
+            // Update algorithm results styles
+            document.querySelectorAll('.algorithm-results').forEach(div => {
+                div.classList.remove('active');
+            });
+            
+            // Get active algorithm elements
+            const algoButton = document.getElementById(`${algorithm.toLowerCase().replace('-', '')}-btn`);
+            const algoResults = document.querySelector(`.algorithm-results.${algorithm.toLowerCase().replace('-', '')}`);
+            
+            if (algoButton) algoButton.classList.add('active');
+            if (algoResults) algoResults.classList.add('active');
+        }
+        
+        // Initialize the demo
+        function initDemo() {
+            initializeGraph();
+            
+            // Populate node selection dropdowns
+            const startSelect = document.getElementById('start-select');
+            const endSelect = document.getElementById('end-select');
+            
+            Object.keys(nodeNames).forEach(id => {
+                const option1 = document.createElement('option');
+                option1.value = id;
+                option1.textContent = nodeNames[id];
+                
+                const option2 = document.createElement('option');
+                option2.value = id;
+                option2.textContent = nodeNames[id];
+                
+                startSelect.appendChild(option1);
+                endSelect.appendChild(option2);
+            });
+            
+            // Set default values
+            startSelect.value = startNodeId;
+            endSelect.value = endNodeId;
+            
+            // Add event listeners
+            document.getElementById('find-path-btn').addEventListener('click', () => {
+                startNodeId = parseInt(startSelect.value);
+                endNodeId = parseInt(endSelect.value);
+                findPaths();
+            });
+            
+            // Algorithm selection buttons
+            document.getElementById('dijkstra-btn').addEventListener('click', () => {
+                activeAlgorithm = "Dijkstra";
+                updateActiveAlgorithm(activeAlgorithm);
+                const result = algorithmResults.find(r => r.name === activeAlgorithm);
+                currentPath = result.path;
+                pathCost = result.pathCost;
+                drawGraph();
+                displayPathInfo();
+            });
+            
+            document.getElementById('astar-btn').addEventListener('click', () => {
+                activeAlgorithm = "A*";
+                updateActiveAlgorithm(activeAlgorithm);
+                const result = algorithmResults.find(r => r.name === activeAlgorithm);
+                currentPath = result.path;
+                pathCost = result.pathCost;
+                drawGraph();
+                displayPathInfo();
+            });
+            
+            document.getElementById('bellman-btn').addEventListener('click', () => {
+                activeAlgorithm = "Bellman-Ford";
+                updateActiveAlgorithm(activeAlgorithm);
+                const result = algorithmResults.find(r => r.name === activeAlgorithm);
+                currentPath = result.path;
+                pathCost = result.pathCost;
+                drawGraph();
+                displayPathInfo();
+            });
+            
+            document.getElementById('floyd-btn').addEventListener('click', () => {
+                activeAlgorithm = "Floyd-Warshall";
+                updateActiveAlgorithm(activeAlgorithm);
+                const result = algorithmResults.find(r => r.name === activeAlgorithm);
+                currentPath = result.path;
+                pathCost = result.pathCost;
+                drawGraph();
+                displayPathInfo();
+            });
+            
+            document.getElementById('reset-view-btn').addEventListener('click', () => {
+                zoom = 1;
+                panOffset = { x: 0, y: 0 };
+                drawGraph();
+            });
+            
+            // Enable graph pan & zoom
+            const graphContainer = document.getElementById('graph-container');
+            
+            graphContainer.addEventListener('mousedown', (e) => {
+                if (e.button === 0) { // Left click
+                    isDragging = true;
+                    lastMousePos = { x: e.clientX, y: e.clientY };
+                }
+            });
+            
+            graphContainer.addEventListener('mousemove', (e) => {
+                if (isDragging) {
+                    const dx = e.clientX - lastMousePos.x;
+                    const dy = e.clientY - lastMousePos.y;
+                    
+                    panOffset.x += dx;
+                    panOffset.y += dy;
+                    
+                    lastMousePos = { x: e.clientX, y: e.clientY };
+                    
+                    // Apply transform
+                    graphContainer.style.transform = `translate(${panOffset.x}px, ${panOffset.y}px) scale(${zoom})`;
+                }
+            });
+            
+            window.addEventListener('mouseup', () => {
+                isDragging = false;
+            });
+            
+            graphContainer.addEventListener('wheel', (e) => {
+                e.preventDefault();
+                
+                const delta = e.deltaY > 0 ? -0.1 : 0.1;
+                zoom = Math.max(0.5, Math.min(2, zoom + delta));
+                
+                // Apply transform
+                graphContainer.style.transform = `translate(${panOffset.x}px, ${panOffset.y}px) scale(${zoom})`;
+            });
+            
+            // Initial calculations
+            findPaths();
+            drawGraph();
+        }
+        
+        // Start the demo when page is loaded
+        window.addEventListener('load', initDemo);
+    </script>
+   <!-- END: JavaScript -->
+>>>>>>> 4276b702091e73d9c742d3d8d2cccbee873de399
 </body>
 </html>
