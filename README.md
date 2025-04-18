@@ -55,10 +55,10 @@ This project is developed to provide interactive visualizations and insights int
 
 ## UI Demonstrations
 ### Map-Based Pathfinding
-[![Map-Based Pathfinding Video](https://drive.google.com/file/d/1ak34hZYmWL50FWxi3CiQooMEuiBE3_9Q/view?usp=sharing)
+[![Map-Based Pathfinding Video](https://github.com/VAISHNAVISARANGA/PATH-FINDER/blob/main/UI_MAP.mp4)
 
 ### Maze-Based Pathfinding
-[![Maze-Based Pathfinding Video](https://drive.google.com/file/d/13znraZ-86-0-RythNZ_cGJfKqRzFEbYk/view?usp=sharing)
+[![Maze-Based Pathfinding Video](https://github.com/VAISHNAVISARANGA/PATH-FINDER/blob/main/UI_Maze%20(1).mp4)
 
 
 ## Technologies Used
