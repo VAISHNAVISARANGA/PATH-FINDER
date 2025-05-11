@@ -18,7 +18,7 @@
 
 ## Introduction
 **PATH-FINDER** is a project designed to solve pathfinding problems efficiently. The project comprises two main functionalities:
-1. **Map-Based Pathfinding**: Finds the shortest path on a map using four different algorithms and determines the best algorithm based on runtime.
+1. **Map-Based Pathfinding**: Implements four different algorithms to find the shortest path on a map and compares their runtimes to determine the most efficient one.
 2. **Maze-Based Pathfinding**: Takes a maze as input and performs the same functionality as the first part, finding the shortest path and comparing algorithm efficiency.
 
 This project is developed to provide interactive visualizations and insights into the performance of popular pathfinding algorithms.
